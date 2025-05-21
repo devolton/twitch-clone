@@ -1,0 +1,280 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  email    String @unique
+  password String
+
+  username String @unique
+
+  displayName String @map("display_name")
+
+  avatar String?
+  bio    String?
+
+  telegramId String? @unique @map("telegram_id")
+
+  isVerified Boolean @default(false) @map("is_verified")
+
+  isEmailVerified Boolean @default(false) @map("is_email_verified")
+
+  isTotpEnabled Boolean @default(false) @map("is_totp_enabled")
+
+  totpSecret String? @map("is_totp_secret")
+
+  isDeactivated Boolean   @default(false) @map("is_deactivated")
+  deactivatedAt DateTime? @map("deactivated_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tokens                   Token[]
+  socialLinks              SocialLink[]
+  stream                   Stream?
+  chatMessages             ChatMessage[]
+  followers                Follow[]                  @relation(name: "followers")
+  followings               Follow[]                  @relation(name: "followings")
+  transactions             Transaction[]
+  notifications            Notification[]
+  sponsorshipPlans         SponsorshipPlan[]
+  notificationSettings     NotificationSetting?
+  sponsorshipSubscriptions SponsorshipSubscription[] @relation(name: "sponsorship_subscriptions")
+  sponsors                 SponsorshipSubscription[] @relation(name: "sponsors")
+
+  @@map("users")
+}
+
+model Stream {
+  id Int @id @default(autoincrement())
+
+  title        String
+  thumbnailUrl String? @map("thumbnail_url")
+
+  ingressId String? @unique @map("ingress_id")
+  serverUrl String? @map("server_url")
+  streamKey String? @map("stream_key")
+
+  isLive                     Boolean @default(false) @map("is_live")
+  isChatEnabled              Boolean @default(true) @map("is_chat_enabled")
+  isChatFollowersOnly        Boolean @default(false) @map("is_chat_followers_only")
+  isChatPremiumFollowersOnly Boolean @default(false) @map("is_chat_premium_followers_only")
+
+  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int?          @unique @map("user_id")
+  chatMessages ChatMessage[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId Int?      @map("category_id")
+
+  @@map("stream")
+}
+
+model ChatMessage {
+  id Int @unique @default(autoincrement())
+
+  text String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int      @map("user_id")
+  stream    Stream   @relation(fields: [streamId], references: [id], onDelete: Cascade)
+  streamId  Int      @map("stream_id")
+
+  @@map("chat_messages")
+}
+
+model Follow {
+  id Int @id @default(autoincrement())
+
+  follower   User @relation(name: "followers", fields: [followerId], references: [id], onDelete: Cascade)
+  followerId Int  @map("follower_id")
+
+  following   User @relation(name: "followings", fields: [followingId], references: [id], onDelete: Cascade)
+  followingId Int  @map("following_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([followingId, followerId])
+  @@index([followerId])
+  @@index([followingId])
+  @@map("follows")
+}
+
+model SocialLink {
+  id Int @id @default(autoincrement())
+
+  title    String
+  url      String
+  position Int
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int?  @map("user_id")
+
+  @@map("social_links")
+}
+
+model Category {
+  id Int @unique @default(autoincrement())
+
+  title        String
+  slug         String  @unique()
+  description  String?
+  thumbnailUrl String  @map("thumbnail_url")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  streams Stream[]
+
+  @@map("categories")
+}
+
+model Notification {
+  id Int @unique @default(autoincrement())
+
+  message String
+  type    NotificationType
+  isRead  Boolean          @default(false)
+
+  user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int?  @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("notifications")
+}
+
+model NotificationSetting {
+  id Int @unique @default(autoincrement())
+
+  siteNotifications     Boolean @default(true) @map("site_notifications")
+  telegramNotifications Boolean @default(true) @map("telegram_notifications")
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int  @unique @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("notification_settings")
+}
+
+model Transaction {
+  id Int @unique @default(autoincrement())
+
+  amount   Float
+  currency String
+
+  stripeSubscriptionId String? @map("stripe_subscription_id")
+
+  status TransactionStatus @default(PENDING)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int?  @map("user_id")
+
+  @@map("transactions")
+}
+
+model SponsorshipPlan {
+  id Int @unique @default(autoincrement())
+
+  title       String
+  description String?
+  price       Float
+
+  stripeProductId String @map("stripe_product_id")
+  stripePlanId    String @map("stripe_plan_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  channel                  User?                     @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  channelId                Int?                      @map("channel_id")
+  sponsorshipSubscriptions SponsorshipSubscription[]
+
+  @@map("sponsorship_plans")
+}
+
+model SponsorshipSubscription {
+  id Int @unique @default(autoincrement())
+
+  expiresAt DateTime @map("expires_at")
+
+  channel   User?            @relation(name: "sponsors", fields: [channelId], references: [id], onDelete: Cascade)
+  channelId Int?             @map("channel_id")
+  user      User?            @relation(name: "sponsorship_subscriptions", fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int?             @map("user_id")
+  plan      SponsorshipPlan? @relation(fields: [planId], references: [id], onDelete: Cascade)
+  planId    Int?             @map("plan_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("sponsorship_subscriptions")
+}
+
+model Token {
+  id Int @id @default(autoincrement())
+
+  token String    @unique
+  type  TokenType
+
+  expiresIn DateTime @map("expires_in")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int?  @map("user_id")
+
+  @@map("token")
+}
+
+enum TokenType {
+  EMAIL_VERIFY
+  PASSWORD_RESET
+  DEACTIVATE_ACCOUNT
+  TELEGRAM_AUTH
+
+  @@map("token_types")
+}
+
+enum NotificationType {
+  STREAM_START
+  NEW_FOLLOWER
+  NEW_SPONSORSHIP
+  ENABLE_TWO_FACTOR
+  VERIFIED_CHANNEL
+
+  @@map("notification_types")
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  EXPIRED
+
+  @@map("transaction_statuses")
+}

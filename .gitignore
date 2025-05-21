@@ -1,0 +1,42 @@
+# Node.js common
+node_modules/
+apps/**/node_modules/
+apps/**/.env
+apps/**/.env.local
+apps/**/.env.production
+apps/**/.env.development
+apps/**/.next/
+apps/**/dist/
+apps/**/.turbo/
+apps/**/.output/
+apps/**/coverage/
+
+# Logs
+apps/**/npm-debug.log*
+apps/**/yarn-debug.log*
+apps/**/yarn-error.log*
+apps/**/pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE configs
+.vscode/
+.idea/
+*.swp
+
+# Optional: локальные данные кэша и билдов
+apps/**/.cache/
+apps/**/.eslintcache
+
+# TypeScript build artifacts
+apps/**/*.tsbuildinfo
+
+# Misc
+apps/**/.parcel-cache/
+apps/**/.sass-cache/
+apps/**/.nuxt/
+
+# Testing
+apps/**/jest-test-results.json

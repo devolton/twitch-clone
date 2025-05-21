@@ -1,0 +1,23 @@
+{
+  "name": "fullstack_temp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "workspaces": [
+    "apps/*",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "concurrently \"pnpm --filter frontend dev\" \"pnpm --filter backend start:dev\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.10.0",
+  "dependencies": {
+    "workspace": "0.0.1-preview.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

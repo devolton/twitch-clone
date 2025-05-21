@@ -1,0 +1,379 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuthModel {
+  message: String
+  user: UserModel
+}
+
+type CategoryModel {
+  createdAt: DateTime!
+  description: String
+  id: Float!
+  slug: String!
+  thumbnailUrl: String!
+  title: String!
+  updatedAt: DateTime!
+}
+
+input ChangeChatSettingsInput {
+  isChatEnabled: Boolean!
+  isChatFollowersOnly: Boolean
+  isChatPremiumFollowersOnly: Boolean
+}
+
+input ChangeEmailInput {
+  email: String!
+}
+
+input ChangeInfoStreamInput {
+  categoryId: Float!
+  title: String!
+}
+
+input ChangeNotificationSettingsInput {
+  siteNotifications: Boolean!
+  telegramNotifications: Boolean!
+}
+
+type ChangeNotificationsSettingsResponse {
+  notificationSettings: NotificationSettingsModel!
+  telegramAuthToken: String
+}
+
+input ChangePasswordInput {
+  newPassword: String!
+  oldPassword: String!
+}
+
+input ChangeProfileInfoInput {
+  bio: String!
+  displayName: String!
+  username: String!
+}
+
+type ChatMessageModel {
+  createdAt: DateTime!
+  id: Float!
+  stream: StreamModel!
+  streamId: Float!
+  text: String!
+  updatedAt: DateTime!
+  user: UserModel!
+  userId: Float!
+}
+
+input CreatePlanInput {
+  description: String
+  price: Float!
+  title: String!
+}
+
+input CreateUserInput {
+  email: String!
+  password: String!
+  username: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input DeactivateAccountInput {
+  email: String!
+  password: String!
+  pin: String
+}
+
+type DeviceModel {
+  browser: String!
+  os: String!
+  type: String!
+}
+
+input EnableTotpInput {
+  pin: String!
+  secret: String!
+}
+
+input FilterInput {
+  searchTerm: String
+  skip: Float
+  take: Float
+}
+
+type FollowModel {
+  createdAt: DateTime!
+  follower: UserModel!
+  followerId: Float!
+  following: UserModel!
+  followingId: Float!
+  id: Float!
+  updatedAt: DateTime!
+}
+
+input GenerateStreamTokenInput {
+  channelId: Float!
+  userId: Float!
+}
+
+type GenerateTokenModel {
+  token: String!
+}
+
+type LocationModel {
+  city: String!
+  country: String!
+  latitude: Float!
+  longitude: Float!
+}
+
+input LoginInput {
+  login: String!
+  password: String!
+  pin: String
+}
+
+type MakePaymentModel {
+  url: String!
+}
+
+type Mutation {
+  changeChatSettings(data: ChangeChatSettingsInput!): Boolean!
+  changeEmail(data: ChangeEmailInput!): Boolean!
+  changeNotificationSettings(data: ChangeNotificationSettingsInput!): ChangeNotificationsSettingsResponse!
+  changePassword(data: ChangePasswordInput!): Boolean!
+  changeProfileAvatar(avatar: Upload!): Boolean!
+  changeProfileInfo(data: ChangeProfileInfoInput!): Boolean!
+  changeStreamInfo(data: ChangeInfoStreamInput!): Boolean!
+  changeStreamThumbnail(thumbnail: Upload!): Boolean!
+  clearSessionCookies: Boolean!
+  createIngress(ingressType: Float!): Boolean!
+  createPlan(data: CreatePlanInput!): Boolean!
+  createSocialLink(data: SocialLinkInput!): Boolean!
+  createUser(data: CreateUserInput!): Boolean!
+  deactivateAccount(data: DeactivateAccountInput!): AuthModel!
+  disableTotp: Boolean!
+  enableTotp(data: EnableTotpInput!): Boolean!
+  followChannel(channelId: Float!): Boolean!
+  generateStreamToken(data: GenerateStreamTokenInput!): GenerateTokenModel!
+  login(data: LoginInput!): AuthModel!
+  logout: Boolean!
+  makePayment(planId: Float!): MakePaymentModel!
+  newPassword(data: NewPasswordInput!): Boolean!
+  removePlan(planId: Float!): Boolean!
+  removeProfileAvatar: Boolean!
+  removeSession(id: String!): Boolean!
+  removeSocialLink(id: Float!): Boolean!
+  removeStreamThumbnail: Boolean!
+  reorderSocialLinks(list: [SocialLinkOrderInput!]!): Boolean!
+  resetPassword(data: ResetPasswordInput!): Boolean!
+  sendChatMessage(data: SendMessageInput!): ChatMessageModel!
+  unfollowChannel(channelId: Float!): Boolean!
+  updateSocialLink(data: SocialLinkInput!, id: Float!): Boolean!
+  verifyAccount(data: VerificationInput!): AuthModel!
+}
+
+input NewPasswordInput {
+  password: String!
+  passwordRepeat: String!
+  token: String!
+}
+
+type NotificationModel {
+  createdAt: DateTime!
+  id: Float!
+  isRead: Boolean!
+  message: String!
+  type: NotificationType!
+  updatedAt: DateTime!
+  user: UserModel!
+  userId: Float!
+}
+
+type NotificationSettingsModel {
+  createdAt: DateTime!
+  id: Float!
+  siteNotifications: Boolean!
+  telegramNotifications: Boolean!
+  updatedAt: DateTime!
+  user: UserModel!
+  userId: Float!
+}
+
+enum NotificationType {
+  ENABLE_TWO_FACTOR
+  NEW_FOLLOWER
+  NEW_SPONSORSHIP
+  STREAM_START
+  VERIFIED_CHANNEL
+}
+
+type PlanModel {
+  channel: UserModel!
+  channelId: Float!
+  createdAt: DateTime!
+  description: String
+  id: Float!
+  price: Float!
+  stripePlanId: Float!
+  stripeProductId: String!
+  title: String!
+  updatedAt: DateTime!
+}
+
+type Query {
+  findAllCategories: [CategoryModel!]!
+  findAllStreams(filter: FilterInput!): [StreamModel!]!
+  findBySlug(slug: String!): CategoryModel!
+  findChannelByUsername(username: String!): UserModel!
+  findChatMessagesByStream(streamId: Float!): [ChatMessageModel!]!
+  findCurrentSession: SessionModel!
+  findFollowersCountByChannel(channelId: Float!): Float!
+  findMyFollowers: [FollowModel!]!
+  findMyFollowings: [FollowModel!]!
+  findMyPlans: [PlanModel!]!
+  findMySponsors: [SubscriptionModel!]!
+  findMyTransactions: [TransactionModel!]!
+  findNotificationsByUser: [NotificationModel!]!
+  findNotificationsUnreadCount: Float!
+  findProfile: UserModel!
+  findRandomCategories: [CategoryModel!]!
+  findRandomStreams: [StreamModel!]!
+  findRecommendedChannels: [UserModel!]!
+  findSessionsByUser: [SessionModel!]!
+  findSocialLinks: [SocialLinkModel!]!
+  findSponsorsByChannel(channelId: Float!): [SubscriptionModel!]!
+  generateTotpSecret: TotpModel!
+}
+
+input ResetPasswordInput {
+  email: String!
+}
+
+input SendMessageInput {
+  streamId: Float!
+  text: String!
+}
+
+type SessionMetadataModel {
+  device: DeviceModel!
+  ip: String!
+  location: LocationModel!
+}
+
+type SessionModel {
+  createdAt: String!
+  id: ID!
+  metadata: SessionMetadataModel!
+  userId: Float!
+}
+
+input SocialLinkInput {
+  title: String!
+  url: String!
+}
+
+type SocialLinkModel {
+  title: String!
+  url: String!
+}
+
+input SocialLinkOrderInput {
+  id: Float!
+  position: Float!
+}
+
+type StreamModel {
+  category: CategoryModel!
+  categoryId: Float!
+  chatMessages: [ChatMessageModel!]!
+  createdAt: DateTime!
+  id: Float!
+  ingressId: String!
+  isChatEnabled: Boolean!
+  isChatFollowersOnly: Boolean!
+  isChatPremiumFollowersOnly: Boolean!
+  isLive: Boolean!
+  serverUrl: String!
+  streamKey: String!
+  thumbnailUrl: String!
+  title: String!
+  updatedAt: DateTime!
+  user: UserModel!
+  userId: Float!
+}
+
+type Subscription {
+  chatMessageAdded(streamId: Float!): ChatMessageModel!
+}
+
+type SubscriptionModel {
+  channelId: Float!
+  createdAt: DateTime!
+  expiresAt: DateTime!
+  id: Float!
+  plan: PlanModel!
+  planId: Float
+  updatedAt: DateTime!
+  user: UserModel!
+  userId: Float
+}
+
+type TotpModel {
+  qrcodeUrl: String!
+  secret: String!
+}
+
+type TransactionModel {
+  amount: Float!
+  createdAt: DateTime!
+  currency: String!
+  id: Float!
+  status: TransactionStatus!
+  stripeSubscriptionId: String!
+  updatedAt: DateTime!
+  user: UserModel!
+  userId: Float!
+}
+
+enum TransactionStatus {
+  EXPIRED
+  FAILED
+  PENDING
+  SUCCESS
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+type UserModel {
+  avatar: String
+  bio: String
+  createdAt: DateTime!
+  deactivatedAt: DateTime
+  displayName: String!
+  email: String!
+  followers: [FollowModel!]!
+  followings: [FollowModel!]!
+  id: Float!
+  isDeactivated: Boolean!
+  isEmailVerified: Boolean!
+  isTotpEnabled: Boolean!
+  isVerified: Boolean!
+  notificationSettings: NotificationSettingsModel!
+  notifications: [NotificationModel!]!
+  password: String!
+  socialLinks: [SocialLinkModel!]!
+  stream: StreamModel!
+  telegramId: String
+  totpSecret: String
+  updatedAt: DateTime!
+  username: String!
+}
+
+input VerificationInput {
+  token: String!
+}
