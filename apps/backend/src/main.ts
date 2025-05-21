@@ -18,8 +18,6 @@ async function bootstrap() {
     const config = app.get(ConfigService);
     const redis = app.get(RedisService);
 
-
-
     app.use(cookieParser(config.getOrThrow<string>('COOKIES_SECRET')));
     app.use(config.getOrThrow<string>("GRAPHQL_PREFIX"), graphqlUploadExpress())
 
