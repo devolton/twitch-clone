@@ -4,7 +4,6 @@ import {FC, useState} from "react";
 import {useTranslations} from "next-intl";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {LoginMutation, useLoginMutation} from "@/graphql/generated/output";
 import {toast} from "sonner";
 import {loginSchema, TypeLoginSchema} from "@/schemas/auth/login.schema";
 import AuthWrapper from "@/components/features/auth/AuthWrapper";
@@ -15,6 +14,7 @@ import {useRouter} from "next/navigation";
 import {InputOTP, InputOTPGroup, InputOTPSlot} from "@/components/ui/common/input-otp";
 import Link from "next/link";
 import {useAuth} from "@/hooks/useAuth";
+import {LoginUserMutation, useLoginUserMutation} from "@/graphql/generated/output";
 
 interface Props {
     className?: string;
@@ -36,8 +36,8 @@ const LoginAccountForm: FC<Props> = ({className}) => {
             password: ''
         }
     });
-    const [login, {loading: isLoadingLogin}] = useLoginMutation({ //first -method name, second - operation status props
-        onCompleted(data: LoginMutation) {
+    const [login, {loading: isLoadingLogin}] = useLoginUserMutation({ //first -method name, second - operation status props
+        onCompleted(data: LoginUserMutation) {
             if (data.login.user) {
                 setIsShowTwoFactor(true);
 

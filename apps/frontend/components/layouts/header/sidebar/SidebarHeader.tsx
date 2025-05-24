@@ -8,7 +8,7 @@ import {Button} from "@/components/ui/common/button";
 import {ArrowLeftFromLine, ArrowRightFromLine} from "lucide-react";
 
 const SidebarHeader = () => {
-    const t = useTranslations('layout.header.sidebar.header');
+    const t = useTranslations('layout.sidebar.header');
     const pathname = usePathname();
     const {isCollapsed, open, close} = useSidebar();
     const label = isCollapsed ? t('expand') : t('collapse');
