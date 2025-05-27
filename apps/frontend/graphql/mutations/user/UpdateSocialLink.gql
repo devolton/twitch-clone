@@ -1,0 +1,3 @@
+mutation UpdateSocialLink($id:Float!$data:SocialLinkInput!){
+    updateSocialLink(id:$id,data:$data)
+}

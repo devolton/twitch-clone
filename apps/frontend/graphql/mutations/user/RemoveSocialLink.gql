@@ -1,0 +1,3 @@
+mutation RemoveSocialLink($id:Float!){
+    removeSocialLink(id:$id)
+}

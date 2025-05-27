@@ -4,6 +4,7 @@ import {useTranslations} from "next-intl";
 import Heading from "@/components/ui/elements/Heading";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/common/Tabs";
 import ChangeAvatarForm from "@/components/features/user/profile/ChangeAvatarForm";
+import SocialLinksForm from "@/components/features/user/profile/social-links-form/SocialLinksForm";
 
 const UserSettings = () => {
     const t = useTranslations('dashboard.settings');
@@ -27,6 +28,7 @@ const UserSettings = () => {
                         <Heading title={t('profile.header.heading')}
                                  description={t('profile.header.description')}/>
                         <ChangeAvatarForm/>
+                        <SocialLinksForm/>
 
                     </div>
                 </TabsContent>

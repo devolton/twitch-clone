@@ -277,6 +277,8 @@ input SocialLinkInput {
 }
 
 type SocialLinkModel {
+  id: Float!
+  position: Float!
   title: String!
   url: String!
 }

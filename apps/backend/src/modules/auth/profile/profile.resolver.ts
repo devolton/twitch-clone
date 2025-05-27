@@ -19,7 +19,7 @@ export class ProfileResolver {
     }
 
     @Authorization()
-    @Query(() => [SocialLinkModel])
+    @Query(() => [SocialLinkModel],{name: 'findSocialLinks'})
     async findSocialLinks(@Authorized() user: User) {
         return await this.profileService.findSocialLinks(user);
     }
