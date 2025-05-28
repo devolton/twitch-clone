@@ -11,10 +11,13 @@ import TokenType = $Enums.TokenType;
 import {DeactivateAccountInput} from "./inputs/deactivate-account.input";
 import {verify} from "argon2";
 import {TelegramService} from "../../libs/telegram/telegram.service";
+import type {SessionMetadata} from "../../../shared/types/session-metadata.types";
+import {RedisService} from "../../../core/redis/redis.service";
 
 @Injectable()
 export class DeactivateService {
     constructor(private readonly prisma: PrismaService,
+                private readonly redis: RedisService,
                 private readonly configService: ConfigService,
                 private readonly mailService: MailService,
                 private readonly telegramService: TelegramService,) {
@@ -34,7 +37,7 @@ export class DeactivateService {
         if (hasExpired) {
             throw new BadRequestException("Token has expired!");
         }
-        await this.prisma.user.update({
+        const user = await this.prisma.user.update({
             where: {
                 id: existingToken.userId!
             },
@@ -49,21 +52,37 @@ export class DeactivateService {
                 type: TokenType.DEACTIVATE_ACCOUNT
             }
         });
+        await this.clearSessions(user.id);
         return await destroySession(req, this.configService);
     }
 
-    async sendDeactivateToken(req: Request, user: User, userAgent: string) {
+    private async sendDeactivateToken(req: Request, user: User, userAgent: string) {
         const deactivateToken = await generateToken(
             this.prisma,
             user,
             TokenType.DEACTIVATE_ACCOUNT,
             false);
-        const metadata = getSessionMetadata(req, userAgent);
+        const metadata: SessionMetadata = getSessionMetadata(req, userAgent);
         await this.mailService.sendDeactivateToken(user.email, deactivateToken.token, metadata);
         if (deactivateToken.user?.notificationSettings?.telegramNotifications && deactivateToken.user?.telegramId) {
             await this.telegramService.sendDeactivateToken(deactivateToken.user.telegramId, deactivateToken.token, metadata);
         }
         return true;
+    }
+
+    private async clearSessions(userId: number) {
+        const keys = await this.redis.keys('*');
+        for (const key of keys) {
+            const sessionData = await this.redis.get(key);
+            if (sessionData) {
+                const session = JSON.parse(sessionData);
+                if (session.userId === userId) {
+                    await this.redis.del(key);
+                }
+            }
+        }
+
+
     }
 
     async deactivate(req: Request,
@@ -83,6 +102,7 @@ export class DeactivateService {
             return {message: "Confirmation code is required!"};
         }
         await this.validateDeactivateToken(req, pin);
+
         return {user};
     }
 

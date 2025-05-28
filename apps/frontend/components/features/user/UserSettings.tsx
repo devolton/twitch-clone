@@ -8,6 +8,7 @@ import SocialLinksForm from "@/components/features/user/profile/social-links-for
 import ChangeEmailForm from "@/components/features/user/account/ChangeEmailForm";
 import ChangePasswordForm from "@/components/features/user/account/ChangePasswordForm";
 import WrapperTotp from "@/components/features/user/account/totp/WrapperTotp";
+import DeactivateCard from "@/components/features/user/account/DeactivateCard";
 
 const UserSettings = () => {
     const t = useTranslations('dashboard.settings');
@@ -44,6 +45,9 @@ const UserSettings = () => {
                         <Heading title={t('account.header.securityHeading')}
                                  description={t('account.header.securityDescription')}/>
                         <WrapperTotp/>
+                        <Heading title={t('account.header.deactivateHeading')}
+                                 description={t('account.header.deactivateDescription')}/>
+                        <DeactivateCard/>
 
                     </div>
                 </TabsContent>

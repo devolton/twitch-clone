@@ -53,7 +53,7 @@ export class VerificationService {
         return saveSession(req, user as User, metadata);
     }
 
-    async sendVerificationToken(user: User) {
+     async sendVerificationToken(user: User) {
         const verificationToken = await generateToken(
             this.prisma,
             user,
