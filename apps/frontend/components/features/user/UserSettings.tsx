@@ -7,6 +7,7 @@ import ChangeAvatarForm from "@/components/features/user/profile/ChangeAvatarFor
 import SocialLinksForm from "@/components/features/user/profile/social-links-form/SocialLinksForm";
 import ChangeEmailForm from "@/components/features/user/account/ChangeEmailForm";
 import ChangePasswordForm from "@/components/features/user/account/ChangePasswordForm";
+import WrapperTotp from "@/components/features/user/account/totp/WrapperTotp";
 
 const UserSettings = () => {
     const t = useTranslations('dashboard.settings');
@@ -40,6 +41,9 @@ const UserSettings = () => {
                                  description={t('account.header.description')}/>
                         <ChangeEmailForm/>
                         <ChangePasswordForm/>
+                        <Heading title={t('account.header.securityHeading')}
+                                 description={t('account.header.securityDescription')}/>
+                        <WrapperTotp/>
 
                     </div>
                 </TabsContent>
