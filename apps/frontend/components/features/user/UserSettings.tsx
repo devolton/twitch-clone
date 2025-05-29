@@ -12,6 +12,7 @@ import DeactivateCard from "@/components/features/user/account/DeactivateCard";
 import ChangeThemeForm from "@/components/features/user/appearance/ChangeThemeForm";
 import ChangeLanguageForm from "@/components/features/user/appearance/ChangeLanguageForm";
 import ChangeColorForm from "@/components/features/user/appearance/ChangeColorForm";
+import ChangeNotificationsSettingsForm from "@/components/features/user/notifications/ChangeNotificationsSettingsForm";
 
 const UserSettings = () => {
     const t = useTranslations('dashboard.settings');
@@ -64,7 +65,14 @@ const UserSettings = () => {
 
                     </div>
                 </TabsContent>
-                <TabsContent value="notifications">Notifications</TabsContent>
+                <TabsContent value="notifications">
+                    <div className={'mt-5 space-y-6'}>
+                        <Heading title={t('notifications.header.deactivateHeading')}
+                                 description={t('notifications.header.deactivateDescription')}/>
+                        <ChangeNotificationsSettingsForm/>
+
+                    </div>
+                </TabsContent>
                 <TabsContent value="sessions">Sessions</TabsContent>
             </Tabs>
         </div>
