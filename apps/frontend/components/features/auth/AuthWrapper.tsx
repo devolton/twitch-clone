@@ -4,6 +4,7 @@ import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components
 import Image from "next/image";
 import {Button} from "@/components/ui/common/button";
 import Link from "next/link";
+import LogoImage from "@/components/images/Logo.image";
 
 interface Props {
     heading: string,
@@ -17,10 +18,7 @@ const AuthWrapper: FC<PropsWithChildren<Props>> = ({children, heading, backButto
         <div className={cn('flex h-full min-h-screen items-center justify-center', className)}>
             <Card className={'w-[450px]'}>
                 <CardHeader className={'flex-row items-center justify-center gap-x-4'}>
-                    <Image src={'/images/logo.svg'}
-                           alt={'devolton-stream'}
-                           width={40}
-                           height={40}/>
+                    <LogoImage/>
                     <CardTitle>
                         {heading}
                     </CardTitle>

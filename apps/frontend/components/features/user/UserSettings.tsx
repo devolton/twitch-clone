@@ -9,6 +9,9 @@ import ChangeEmailForm from "@/components/features/user/account/ChangeEmailForm"
 import ChangePasswordForm from "@/components/features/user/account/ChangePasswordForm";
 import WrapperTotp from "@/components/features/user/account/totp/WrapperTotp";
 import DeactivateCard from "@/components/features/user/account/DeactivateCard";
+import ChangeThemeForm from "@/components/features/user/appearance/ChangeThemeForm";
+import ChangeLanguageForm from "@/components/features/user/appearance/ChangeLanguageForm";
+import ChangeColorForm from "@/components/features/user/appearance/ChangeColorForm";
 
 const UserSettings = () => {
     const t = useTranslations('dashboard.settings');
@@ -51,7 +54,16 @@ const UserSettings = () => {
 
                     </div>
                 </TabsContent>
-                <TabsContent value="appearance">Appearance</TabsContent>
+                <TabsContent value="appearance">
+                    <div className={'mt-5 space-y-6'}>
+                        <Heading title={t('appearance.header.deactivateHeading')}
+                                 description={t('appearance.header.deactivateDescription')}/>
+                        <ChangeThemeForm/>
+                        <ChangeLanguageForm/>
+                        <ChangeColorForm/>
+
+                    </div>
+                </TabsContent>
                 <TabsContent value="notifications">Notifications</TabsContent>
                 <TabsContent value="sessions">Sessions</TabsContent>
             </Tabs>

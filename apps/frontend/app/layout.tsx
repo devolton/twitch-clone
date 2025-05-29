@@ -2,11 +2,13 @@ import type {Metadata} from "next";
 
 import {GeistSans} from 'geist/font/sans'
 import "./globals.css";
+import "../styles/themes.css"
 import {ApolloClientProvider} from "@/providers/ApolloClientProvider";
 import {NextIntlClientProvider} from "next-intl";
 import {getLocale, getMessages} from "next-intl/server";
 import {ThemeProvider} from "@/providers/ThemeProvider";
 import {ToastProvider} from "@/providers/ToastProvider";
+import ColorSwitcher from "@/components/ui/elements/ColorSwitcher";
 
 
 export const metadata: Metadata = {
@@ -28,10 +30,12 @@ export default async function RootLayout({
         >
         <ApolloClientProvider>
             <NextIntlClientProvider messages={messages}>
+                <ColorSwitcher/>
                 <ThemeProvider attribute={'class'}
                                defaultTheme={'dark'}
                                disableTransitionOnChange
                 >
+
                     <ToastProvider/>
                     {children}
                 </ThemeProvider>
